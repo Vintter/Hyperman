@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/tmp/tmp.RlG6ToKTXw/main.cpp
+iostream
+-
+string
+-
+vector
+-
+chrono
+-
+algorithm
+-
+unordered_map
+-
+
