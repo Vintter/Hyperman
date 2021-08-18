@@ -62,7 +62,7 @@ int main() {
             }
         }
         h=0;
-        while(start != 1 && !node[start].x && !containsVector(start,s)){
+        while(start != 0 && !node[start].x && !containsVector(start,s)){
             bosses++;
             node[start].x = true;
             s.push_back(start);
@@ -71,7 +71,7 @@ int main() {
         S--;
     }
 
-    cout<<bosses+1<<endl;
+    cout<<bosses<<endl;
 
 
 #ifdef LOCAL
