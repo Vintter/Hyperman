@@ -1,63 +1,82 @@
 #include <iostream>
 #include <memory>
-#include <string>
 #include <vector>
 #include <chrono>
 #include <algorithm>
-#include <unordered_map>
+#include <string>
 
 #define LOCAL
 
 using namespace std;
-typedef std::unordered_multimap<int,int> map;
+
+class No{
+public:
+    uint32_t move;
+    bool x;//verifica se ja houve uma passagem por esse no
+};
+
+bool contains(uint32_t n,vector<No> v){
+    for(auto i:v)
+        if (n == i.move)
+            return true;
+    return false;
+}
+
+bool containsVector(uint32_t n,vector<uint32_t> v){
+    for(auto i:v)
+        if (n == i)
+            return true;
+    return false;
+}
 
 int main() {
 
-    map m1,m2;
-    int N,S,i=0,x;
-
-    vector<int> a,b;
+    uint32_t N,S,bosses=0,start,x;
 
 #ifdef LOCAL
-    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 #endif
 
     cin>>N>>S;
-    for(int j=2;j<=N;j++){
-        cin>>i;
-        m1.insert(map::value_type(i,j));
-        m2.insert(map::value_type(j,i));
+    vector<No> node (N+1);
+    for(uint32_t i=2;i<=N;i++){
+        cin>>x;
+      node[i].move = x;
     }
-    m2.insert(map::value_type(1,0));
 
-    while(S > 0) {
-        for (map::const_iterator it = m1.begin(); it != m1.end(); ++it) {
-            if (m1.count(it->second) == 0 && it->second != 1) {
-                x = it->second;
-                map::const_iterator it2;
-                while (m2.contains(x)) {
-                    it2 = m2.find(x);
-                    b.push_back(it2->first);
-                    x = it2->second;
-                }
-                if (a.empty() || b.size() > a.size()) {
-                    a = b;
-                }
-                b.clear();
+    while(S>0) {
+        vector<uint32_t> s;
+        uint32_t h=0;
+        for(uint32_t i=2;i<=N;i++) {
+            x=0;
+            uint32_t y=i;
+            while(y != 0 && !node[y].x && !containsVector(y,s)){
+                s.push_back(y);
+                x++;
+                y = node[y].move;
+            }
+            s.clear();
+            if(x>h){
+                h = x;
+                start = i;
             }
         }
-        while (!a.empty()) {
-            m2.erase(a[0]);
-            erase(a, a[0]);
+        h=0;
+        while(start != 1 && !node[start].x && !containsVector(start,s)){
+            bosses++;
+            node[start].x = true;
+            s.push_back(start);
+            start = node[start].move;
         }
         S--;
     }
 
-    cout<<N-m2.size()<<endl;
+    cout<<bosses+1<<endl;
+
 
 #ifdef LOCAL
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds >(end - start).count() << std::endl;
+	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds >(end - begin).count() << std::endl;
 #endif
     return 0;
 }
